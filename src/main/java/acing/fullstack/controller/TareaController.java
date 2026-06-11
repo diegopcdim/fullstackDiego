@@ -2,9 +2,9 @@ package acing.fullstack.controller;
 
 import acing.fullstack.model.Tarea;
 import acing.fullstack.service.TareaService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,13 +14,34 @@ public class TareaController {
 
     private final TareaService tareaService;
 
-    // Inyección por constructor
     public TareaController(TareaService tareaService) {
         this.tareaService = tareaService;
     }
 
     @GetMapping
     public List<Tarea> getTareas() {
-        return tareaService.getTareas(); // delega al servicio
+        return tareaService.getTareas();
+    }
+
+    @PostMapping
+    public ResponseEntity<Tarea> crearTarea(@RequestBody Tarea tarea) {
+        Tarea nueva = tareaService.crearTarea(tarea);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tarea> actualizarTarea(@PathVariable Long id,
+                                                 @RequestBody Tarea tarea) {
+        return tareaService.actualizarTarea(id, tarea)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarTarea(@PathVariable Long id) {
+        if (tareaService.eliminarTarea(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

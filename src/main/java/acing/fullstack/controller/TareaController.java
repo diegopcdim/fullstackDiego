@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tareas")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TareaController {
 
     private final TareaService tareaService;

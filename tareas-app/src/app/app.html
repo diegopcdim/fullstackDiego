@@ -1,5 +1,20 @@
 <h1>Lista de Tareas</h1>
-<p>Total tareas: {{ tareas().length }}</p>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <input formControlName="titulo" placeholder="Nueva tarea..." />
+
+  @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+    @if (form.get('titulo')?.errors?.['required']) {
+      <small>El título es obligatorio</small>
+    }
+    @if (form.get('titulo')?.errors?.['minlength']) {
+      <small>Mínimo 3 caracteres</small>
+    }
+  }
+
+  <button type="submit" [disabled]="form.invalid">Añadir</button>
+</form>
+
 <ul>
   @for (tarea of tareas(); track tarea.id) {
     <li>{{ tarea.titulo }}</li>

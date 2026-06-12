@@ -1,25 +1,29 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { TareaService } from './services/tarea.service';
+import { Tarea } from './models/tarea';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App implements OnInit {
-  tareas = signal<any[]>([]);
 
-  constructor(private http: HttpClient) {}
+  tareas = signal<Tarea[]>([]);
+
+  constructor(private tareaService: TareaService) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('http://localhost:8080/tareas').subscribe({
-      next: (data) => {
-        console.log('Datos recibidos:', data);
+    console.log('ngOnInit ejecutado');
+    this.tareaService.getTareas().subscribe({
+      next: (data: Tarea[]) => {
+        console.log('Tareas recibidas:', data);
         this.tareas.set(data);
       },
-      error: (err) => console.error('Error:', err)
+      error: (err: unknown) => console.error('Error:', err)
     });
   }
 }

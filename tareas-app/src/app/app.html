@@ -1,0 +1,6 @@
+<h1>Lista de Tareas</h1>
+<ul>
+  @for (tarea of tareas(); track tarea.id) {
+    <li>{{ tarea.titulo }} — {{ tarea.completada ? 'Completada' : 'Pendiente' }}</li>
+  }
+</ul>
